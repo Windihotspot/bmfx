@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Bank Statement</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        pre {
+            background: #333;
+            color: lime;
+            padding: 10px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Upload Bank Statement</h2>
+        
+        <label for="token">Authorization Token:</label>
+        <input type="text" id="token" placeholder="Enter your Bearer token" required>
+
+        <label for="statement_type">Statement Type:</label>
+        <select id="statement_type">
+            <option value="consumer">Consumer</option>
+            <option value="business">Business</option>
+        </select>
+
+        <label for="password">Password (if required):</label>
+        <input type="password" id="password" placeholder="Optional">
+
+        <label for="file">Upload Statement File:</label>
+        <input type="file" id="file" required>
+
+        <button onclick="uploadStatement()">Upload</button>
+
+        <h3>Response:</h3>
+        <pre id="response">Waiting for response...</pre>
+    </div>
+
+    <script>
+        async function uploadStatement() {
+            const token = document.getElementById("token").value;
+            const statementType = document.getElementById("statement_type").value;
+            const password = document.getElementById("password").value;
+            const fileInput = document.getElementById("file");
+
+            if (!fileInput.files.length) {
+                alert("Please select a file.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("statementType", statementType);
+            formData.append("password", password);
+            formData.append("file", fileInput.files[0]);
+
+            const url = "http://18.212.86.239/api/7188d42a-b70a-4732-8447-1d665df93b9f/bank-statement-analyze";
+
+            document.getElementById("response").innerText = "Uploading...";
+
+            try {
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Authorization": "Bearer " + token  // Include token in the request
+                    },
+                    body: formData  // Send form data
+                });
+
+                let text = await response.text(); // Get raw response
+                try {
+                    text = JSON.stringify(JSON.parse(text), null, 2); // Format JSON if possible
+                } catch (e) {
+                    // If it's not JSON, just show the raw response
+                }
+
+                document.getElementById("response").innerText = `Status: ${response.status}\n\n${text}`;
+            } catch (error) {
+                document.getElementById("response").innerText = "Error: " + error.message;
+            }
+        }
+    </script>
+
+</body>
+</html>
