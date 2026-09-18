@@ -1,5 +1,6 @@
 import Dashboard from '@/views/Dashboard.vue'
 import LandingPage from '@/views/LandingPage.vue'
+import Portfolio from '@/views/Portfolio.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 
@@ -15,6 +16,11 @@ const router = createRouter({
       path: '/dashboard',
       name: 'dashboard',
       component: Dashboard
+    },
+    {
+      path: '/portfolio',
+      name: 'portfolio',
+      component: Portfolio
     }
     
   ]
