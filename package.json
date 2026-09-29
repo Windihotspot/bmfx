@@ -12,7 +12,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "format": "prettier --write src/",
     "predeploy": "vite build",
-    "deploy": "vite build && echo www.wealthoceanstech.com > dist/CNAME && gh-pages -d dist -b gh-pages --no-history"
+    "deploy": "vite build && echo www.bmfxtech.com > dist/CNAME && gh-pages -d dist -b gh-pages --no-history"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.5.2",

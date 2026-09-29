@@ -1,104 +1,85 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { supabase } from '@/services/supabase.js'
+import { supabase } from '@/services/supabase' // adjust to wherever your client file lives
 
 export const useAuthStore = defineStore('auth', () => {
-  const user = ref(null) // supabase user object
-  const merchant = ref(null) // merchant details
-  const token = ref(null) // optional JWT or session token
+  const user = ref(null)
+  const session = ref(null)
+  const loading = ref(false)
+  const error = ref(null)
 
-  const facilities = ref([]) // merchant facilities
-  const selectedFacility = ref(null)
+  async function signUp({ firstName, lastName, phone, email, password }) {
+    loading.value = true
+    error.value = null
 
-  // Load from localStorage on init
-  const init = () => {
-    const storedUser = localStorage.getItem('user')
-    const storedMerchant = localStorage.getItem('merchant')
-    const storedToken = localStorage.getItem('token')
-    const storedFacilities = localStorage.getItem('facilities')
-    const storedSelectedFacility = localStorage.getItem('selectedFacility')
-
-    if (storedUser) user.value = JSON.parse(storedUser)
-    if (storedMerchant) merchant.value = JSON.parse(storedMerchant)
-    if (storedToken) token.value = storedToken
-    if (storedFacilities) facilities.value = JSON.parse(storedFacilities)
-    if (storedSelectedFacility) selectedFacility.value = JSON.parse(storedSelectedFacility)
-  }
-
-  const setAuth = (u, m, t = null) => {
-    user.value = u
-    merchant.value = m
-    token.value = t
-
-    localStorage.setItem('user', JSON.stringify(u))
-    localStorage.setItem('merchant', JSON.stringify(m))
-    if (t) localStorage.setItem('token', t)
-  }
-
-  const setSelectedFacility = (facilityId) => {
-    const found = facilities.value.find((f) => f.id === facilityId) || null
-    selectedFacility.value = found
-    if (found) {
-      localStorage.setItem('selectedFacility', JSON.stringify(found))
-    } else {
-      localStorage.removeItem('selectedFacility')
-    }
-  }
-
-  const setFacilities = (list) => {
-    facilities.value = list || []
-    localStorage.setItem('facilities', JSON.stringify(list || []))
-
-    // Preserve selected if still in the new list
-    if (selectedFacility.value) {
-      const stillExists = facilities.value.find((f) => f.id === selectedFacility.value.id)
-      if (stillExists) {
-        setSelectedFacility(stillExists.id)
-        return
-      }
-    }
-
-    // Otherwise fallback to first one
-    if (list?.length > 0) {
-      setSelectedFacility(list[0].id)
-    } else {
-      setSelectedFacility(null)
-    }
-  }
-
-  const fetchFacilities = async () => {
-    const { data, error } = await supabase.rpc('get_merchant_facilities', {
-      p_merchant_id: merchant.value.id
+    const { data, error: signUpError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        // picked up by the DB trigger to create the profiles row
+        data: {
+          first_name: firstName,
+          last_name: lastName,
+          phone,
+        },
+      },
     })
-    console.log('merchant facillities:', data)
-    if (error) throw error
-    setFacilities(data || [])
+
+    loading.value = false
+
+    if (signUpError) {
+      error.value = signUpError.message
+      return { success: false }
+    }
+
+    user.value = data.user
+    session.value = data.session
+
+    // If email confirmation is ON in Supabase, session is null until they verify.
+    return { success: true, needsEmailConfirmation: !data.session }
   }
 
-  const logout = () => {
+  async function signIn({ email, password }) {
+    loading.value = true
+    error.value = null
+
+    const { data, error: signInError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    })
+
+    loading.value = false
+
+    if (signInError) {
+      error.value =
+        signInError.message === 'Email not confirmed'
+          ? 'Please confirm your email first. Check your inbox for the link.'
+          : signInError.message
+      return { success: false }
+    }
+
+    user.value = data.user
+    session.value = data.session
+    return { success: true }
+  }
+
+  async function signOut() {
+    await supabase.auth.signOut()
     user.value = null
-    merchant.value = null
-    token.value = null
-    facilities.value = []
-    selectedFacility.value = null
+    session.value = null
+  }
 
-    localStorage.removeItem('user')
-    localStorage.removeItem('merchant')
-    localStorage.removeItem('token')
-    localStorage.removeItem('facilities')
-    localStorage.removeItem('selectedFacility')
+  // Call once in main.js / App.vue to keep state in sync
+  async function init() {
+    const { data } = await supabase.auth.getSession()
+    session.value = data.session
+    user.value = data.session?.user ?? null
+
+    supabase.auth.onAuthStateChange((_event, newSession) => {
+      session.value = newSession
+      user.value = newSession?.user ?? null
+    })
   }
-  return {
-    user,
-    merchant,
-    token,
-    facilities,
-    selectedFacility,
-    setAuth,
-    setFacilities,
-    setSelectedFacility,
-    logout,
-    init,
-    fetchFacilities
-  }
+
+  return { user, session, loading, error, signUp, signIn, signOut, init }
 })
