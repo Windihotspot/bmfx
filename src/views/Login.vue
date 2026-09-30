@@ -114,7 +114,7 @@ const inputClass =
 
         <p class="mt-6 text-center text-xs text-slate-500">
           New to BMFX?
-          <router-link to="/signup" class="font-medium text-fuchsia-500 hover:text-fuchsia-600">Create an account</router-link>
+          <router-link to="/register" class="font-medium text-fuchsia-500 hover:text-fuchsia-600">Create an account</router-link>
         </p>
       </div>
     </div>

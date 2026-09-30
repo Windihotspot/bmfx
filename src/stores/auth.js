@@ -20,9 +20,9 @@ export const useAuthStore = defineStore('auth', () => {
         data: {
           first_name: firstName,
           last_name: lastName,
-          phone,
-        },
-      },
+          phone
+        }
+      }
     })
 
     loading.value = false
@@ -45,7 +45,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     const { data, error: signInError } = await supabase.auth.signInWithPassword({
       email,
-      password,
+      password
     })
 
     loading.value = false
@@ -59,6 +59,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     user.value = data.user
+    console.log('user:', user.value)
     session.value = data.session
     return { success: true }
   }

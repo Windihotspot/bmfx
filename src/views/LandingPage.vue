@@ -1,5 +1,16 @@
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const login = () => {
+  router.push('/login')
+}
+
+const register = () => {
+  router.push('/register')
+}
+
 
 const navLinks = [
   { label: 'Markets', hasChevron: true },
@@ -76,10 +87,10 @@ const searchQuery = ref('')
             More
             <v-icon icon="mdi-dots-horizontal" size="16" />
           </button>
-          <button class="rounded-full border border-slate-200 px-4 py-2 text-sm text-slate-700 transition hover:bg-slate-50">
+          <button @click="login" class="rounded-full border border-slate-200 px-4 py-2 text-sm text-slate-700 transition hover:bg-slate-50">
             Sign In
           </button>
-          <button class="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-fuchsia-500 to-rose-400 px-4 py-2 text-sm font-medium text-white shadow-md shadow-fuchsia-500/20 transition hover:brightness-110">
+          <button @click="register" class="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-fuchsia-500 to-rose-400 px-4 py-2 text-sm font-medium text-white shadow-md shadow-fuchsia-500/20 transition hover:brightness-110">
             Join BMFX
             <v-icon icon="mdi-arrow-right" size="16" />
           </button>
@@ -112,13 +123,11 @@ const searchQuery = ref('')
         </p>
 
         <div class="mt-9 flex flex-wrap items-center justify-center gap-3">
-          <button class="flex items-center gap-2 rounded-full bg-gradient-to-r from-fuchsia-500 to-rose-400 px-6 py-3 text-sm font-medium text-white shadow-md shadow-fuchsia-500/25 transition hover:brightness-110">
-            Open Dashboard
+          <button @click="register" class="flex items-center gap-2 rounded-full bg-gradient-to-r from-fuchsia-500 to-rose-400 px-6 py-3 text-sm font-medium text-white shadow-md shadow-fuchsia-500/25 transition hover:brightness-110">
+            Open account
             <v-icon icon="mdi-arrow-right" size="16" />
           </button>
-          <button class="rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50">
-            Explore More
-          </button>
+          
         </div>
       </div>
 

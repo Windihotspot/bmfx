@@ -28,7 +28,7 @@ const shortcuts = [
 ]
 
 const wallet = ref({
-  total: '$24,918.32',
+  total: '$15.00',
   changePercent: -1.7,
   deposits: '4,240',
   withdrawals: '1,180',
@@ -157,9 +157,12 @@ const newsletter = ref({
           <h3 class="mt-4 text-2xl font-semibold leading-snug">
             The best rates<br />for active traders
           </h3>
-          <button class="mt-6 flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-sm font-medium text-emerald-700 transition hover:bg-emerald-50">
+          <!-- <button class="mt-6 flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-sm font-medium text-emerald-700 transition hover:bg-emerald-50">
             Show more
             <v-icon icon="mdi-arrow-right" size="16" />
+          </button> -->
+          <button class="mt-6 flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-sm font-medium text-emerald-700 transition hover:bg-emerald-50">
+            Coming Soon
           </button>
 
           <div class="pointer-events-none absolute -right-6 -top-6 h-40 w-40 rounded-full bg-white/10"></div>
@@ -168,19 +171,6 @@ const newsletter = ref({
           </div>
         </div>
 
-        <!-- shortcuts row -->
-        <div class="card-shortcuts flex items-center justify-between rounded-3xl border border-slate-100 bg-white px-5 py-5">
-          <div
-            v-for="item in shortcuts"
-            :key="item.label"
-            class="flex flex-1 flex-col items-center gap-2 text-center"
-          >
-            <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-50 text-slate-500">
-              <v-icon :icon="item.icon" size="20" />
-            </span>
-            <span class="text-xs text-slate-500">{{ item.label }}</span>
-          </div>
-        </div>
 
         <!-- offer / referral card -->
         <div class="card-offer flex flex-col justify-between rounded-3xl border border-slate-100 bg-white p-5">
@@ -212,37 +202,20 @@ const newsletter = ref({
               <span class="flex h-7 w-7 items-center justify-center rounded-full bg-fuchsia-50 text-fuchsia-500">
                 <v-icon icon="mdi-wallet-outline" size="15" />
               </span>
-              Wallet view
+              Wallet balance
               <v-icon icon="mdi-chevron-right" size="15" class="text-slate-300" />
             </span>
             <span class="rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-medium text-emerald-600">Live</span>
           </div>
-          <p class="mt-1 text-xs text-slate-400">A brief on your portfolio</p>
 
           <div class="mt-4 flex items-end justify-between">
             <div class="flex items-baseline gap-2">
               <span class="text-2xl font-semibold text-slate-900">{{ wallet.total }}</span>
-              <span class="text-xs font-medium text-rose-500">{{ wallet.changePercent }}%</span>
             </div>
-            <svg viewBox="0 0 84 32" class="h-8 w-20">
-              <polyline :points="wallet.sparkline" fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round" />
-            </svg>
+            
           </div>
 
-          <div class="mt-5 flex items-center justify-between border-t border-slate-100 pt-4 text-xs">
-            <span class="flex items-center gap-1.5 text-slate-500">
-              <v-icon icon="mdi-arrow-down-left" size="14" class="text-emerald-500" />
-              ${{ wallet.deposits }}
-            </span>
-            <span class="flex items-center gap-1.5 text-slate-500">
-              <v-icon icon="mdi-arrow-up-right" size="14" class="text-rose-500" />
-              ${{ wallet.withdrawals }}
-            </span>
-            <span class="flex items-center gap-1.5 text-slate-500">
-              <v-icon icon="mdi-bitcoin" size="14" class="text-amber-500" />
-              {{ wallet.btc }} BTC
-            </span>
-          </div>
+          
         </div>
 
         <!-- statistics card -->
