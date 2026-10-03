@@ -88,17 +88,17 @@ const visibleSidebarItems = computed(() => {
 }
 
 .sidebar-active {
-  background: #f5f3ff;
+  background: #fdf4ff;
 }
 
 .sidebar-active div {
-  background: white;
-  color: #7c3aed;
-  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.08);
+  background: linear-gradient(135deg, #d946ef, #7c3aed);
+  color: white;
+  box-shadow: 0 4px 12px rgba(217, 70, 239, 0.2);
 }
 
 .sidebar-active span {
-  color: #6d28d9;
+  color: #7c3aed;
   font-weight: 600;
 }
 </style>

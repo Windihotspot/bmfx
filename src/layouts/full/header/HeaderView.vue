@@ -24,11 +24,12 @@ const currentPage = computed(() => {
 })
 
 const userName = computed(() => {
-  return (
-    authStore.user?.name ||
-    authStore.user?.email?.split('@')[0] ||
-    'User'
-  )
+  const firstName = authStore.user?.user_metadata?.first_name || ''
+  const lastName = authStore.user?.user_metadata?.last_name || ''
+
+  const fullName = `${firstName} ${lastName}`.trim()
+
+  return fullName || authStore.user?.user_metadata?.email?.split('@')[0] || 'User'
 })
 
 const userEmail = computed(() => {
@@ -74,12 +75,6 @@ const handleLogout = async () => {
     <!-- Page title -->
     <div class="min-w-0">
       
-
-      <!-- <h1
-        class="mt-0.5 truncate text-[15px] font-semibold text-gray-900"
-      >
-        {{ currentPage }}
-      </h1> -->
     </div>
 
     <!-- Header actions -->
@@ -123,7 +118,7 @@ const handleLogout = async () => {
               <p
                 class="max-w-[150px] truncate text-[10px] text-gray-400"
               >
-                {{ organizationName }}
+                {{ userEmail }}
               </p>
             </div>
 
@@ -180,30 +175,7 @@ const handleLogout = async () => {
               </div>
             </div>
 
-            <!-- Organization -->
-            <div
-              class="mt-4 flex items-center gap-3 rounded-xl bg-gray-50 px-3 py-3"
-            >
-              <div
-                class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-purple-600 shadow-sm"
-              >
-                <i class="fa-solid fa-building text-xs"></i>
-              </div>
-
-              <div class="min-w-0">
-                <p
-                  class="text-[9px] font-semibold uppercase tracking-wider text-gray-400"
-                >
-                  Organization
-                </p>
-
-                <p
-                  class="mt-0.5 truncate text-xs font-semibold text-gray-800"
-                >
-                  {{ organizationName }}
-                </p>
-              </div>
-            </div>
+            
           </div>
 
           <!-- Menu -->

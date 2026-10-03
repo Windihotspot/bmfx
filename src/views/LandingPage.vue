@@ -363,3 +363,28 @@ const searchQuery = ref('')
 
   </div>
 </template>
+
+<style scoped>
+.sidebar-scroll {
+  scrollbar-width: none;
+}
+
+.sidebar-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.sidebar-active {
+  background: #fdf4ff;
+}
+
+.sidebar-active div {
+  background: linear-gradient(135deg, #d946ef, #7c3aed);
+  color: white;
+  box-shadow: 0 4px 12px rgba(217, 70, 239, 0.2);
+}
+
+.sidebar-active span {
+  color: #7c3aed;
+  font-weight: 600;
+}
+</style>
