@@ -151,7 +151,7 @@ const sidebarItems = [
   },
 
   {
-    section: 'authenticatedISTRATION',
+    section: 'USER MANAGEMENT',
     roles: ['authenticated'],
     items: [
       {

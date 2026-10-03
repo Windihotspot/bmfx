@@ -59,11 +59,8 @@ const inputClass =
       <div class="rounded-3xl border border-slate-100 bg-white p-8 shadow-sm">
         <div class="text-center">
           <span class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-1.5 text-xs text-slate-500 shadow-sm">
-            <v-icon icon="mdi-chevron-up" size="14" class="text-fuchsia-500" />
             Welcome back
           </span>
-          <h1 class="mt-5 text-3xl font-bold tracking-tight text-slate-900">Sign in to BMFX</h1>
-          <p class="mt-2 text-sm text-slate-500">Access your wallet and portfolio.</p>
         </div>
 
         <form class="mt-8 space-y-4" @submit.prevent="handleSubmit" novalidate>

@@ -62,7 +62,7 @@ const userInitials = computed(() => {
 
 const handleLogout = async () => {
   try {
-    await authStore.logout()
+    await authStore.logOut()
     await router.push('/login')
   } catch (error) {
     console.error('Logout failed:', error)

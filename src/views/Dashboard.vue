@@ -277,22 +277,17 @@ const submitDemoTrade = () => {
             <div>
               <div class="flex items-center gap-2">
                 <h2 class="text-xl font-semibold text-slate-900">Trade Signals</h2>
-                <span
-                  class="rounded-full bg-fuchsia-50 px-2 py-1 text-xs font-medium text-fuchsia-600"
-                >
-                  Demo
-                </span>
+                
               </div>
-              <p class="mt-1 text-sm text-slate-500">Example trading setups for your watchlist.</p>
             </div>
 
-            <button
+            <!-- <button
               class="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-600 hover:bg-slate-50"
               @click="tradeSignals = [...tradeSignals]"
             >
               <v-icon icon="mdi-refresh" size="16" />
               Refresh
-            </button>
+            </button> -->
           </div>
 
           <div class="mb-5 flex flex-wrap gap-2">
@@ -308,13 +303,7 @@ const submitDemoTrade = () => {
               "
             >
               {{ market }}
-              <span class="ml-1 opacity-70">
-                {{
-                  market === 'All'
-                    ? tradeSignals.length
-                    : tradeSignals.filter((signal) => signal.market === market).length
-                }}
-              </span>
+              
             </button>
           </div>
 
@@ -590,7 +579,7 @@ const submitDemoTrade = () => {
               <v-icon icon="mdi-swap-horizontal" size="32" class="text-slate-300" />
               <p class="mt-3 font-medium text-slate-700">No trades yet</p>
               <p class="mt-1 text-sm text-slate-400">
-                Choose a signal and place a demo order to get started.
+                Choose a signal and place a order to get started.
               </p>
             </div>
 
@@ -640,7 +629,7 @@ const submitDemoTrade = () => {
         <v-dialog v-model="tradeDialog" max-width="440">
           <div class="rounded-3xl bg-white p-6">
             <div class="flex items-center justify-between">
-              <h2 class="text-xl font-semibold text-slate-900">Place Demo Trade</h2>
+              <h2 class="text-xl font-semibold text-slate-900">Place Trade</h2>
 
               <button @click="tradeDialog = false" class="text-slate-400 hover:text-slate-700">
                 <v-icon icon="mdi-close" />
@@ -706,9 +695,7 @@ const submitDemoTrade = () => {
                 </span>
               </div>
 
-              <p class="mt-3 text-xs leading-5 text-amber-700">
-                Demo only. No funds are transferred and no real market order is sent.
-              </p>
+              
             </div>
 
             <p
@@ -728,7 +715,7 @@ const submitDemoTrade = () => {
                   : 'bg-rose-500 hover:bg-rose-600'
               "
             >
-              Confirm Demo {{ tradeSide }}
+              Confirm {{ tradeSide }}
             </button>
 
             <button
