@@ -1,163 +1,104 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import sidebarItems from './sidebarItem'
-import { useRoute, useRouter } from 'vue-router'
-import axios from 'axios'
-const route = useRoute()
-const router = useRouter()
-// Function to check if the current route is active
-const isActive = (path) => {
-  return route.path === path
-}
 import { useAuthStore } from '@/stores/auth'
+
+defineEmits(['navigate'])
+
 const authStore = useAuthStore()
-const token = computed(() => authStore.token)
-const tenantId = computed(() => authStore.tenant_id)
 
-const sidebarMenu = ref(sidebarItems)
-const logout = async () => {
-  const savedAuth = JSON.parse(localStorage.getItem('data') || '{}')
-  const token = savedAuth?.token || authStore.token
-  const tenantId = savedAuth?.user?.tenant_id || authStore.tenant_id
+const userRole = computed(() => {
+  return authStore.user?.role?.toLowerCase() || ''
+})
 
-  try {
-    const response = await axios.post(
-      `https://dev02201.getjupita.com/api/${tenantId}/logout`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
-    )
-
-    // Handle the successful logout
-    console.log('Logged out successfully:', response.data)
-
-    // Redirect to login page or any other page
-    router.push('/')
-  } catch (error) {
-    // Handle errors
-    errorMessage.value = error.response?.data?.message || error.message
-    console.error('Logout failed:', errorMessage.value)
-  } finally {
-    isLoading.value = false
-  }
-}
+const visibleSidebarItems = computed(() => {
+  return sidebarItems.filter((group) => {
+    return group.roles?.includes(userRole.value)
+  })
+})
 </script>
 
 <template>
-  <div class="side-bar mt-4 d-flex flex-column h-full justify-between overflow-hidden">
-    <!-- Logo part -->
-    <!-- <div class="logo pa-4">
-      <img src="/src/assets/images/white.png" class="" />
-    </div> -->
+  <div class="flex h-full flex-col bg-white">
 
-    <!-- Navigation -->
-    <div class="flex-grow mt-4">
-      <v-list class="pa-4">
-        <template v-for="(item, i) in sidebarMenu" :key="i">
-          <v-list-item
-            @click="router.push(item.path)"
-            class="mb-4 pr-4 custom-btn no-uppercase relative"
-            size="small"
-            rounded="lg"
-            block
-            :class="{ 'custom-active': isActive(item.path) }"
-          >
-            <div class="flex items-center w-full">
-              <v-icon left>{{ item.icon }}</v-icon>
-              <span class="menu-item ml-4" v-text="item.title"></span>
-            </div>
-
-            <!-- Active bar INSIDE the v-list-item -->
-          </v-list-item>
-          <!-- <div v-if="isActive(item.path)" class="active-bar"></div> -->
-        </template>
-      </v-list>
+    <!-- Logo -->
+    <div class="flex h-[76px] shrink-0 items-center border-b border-purple-50 px-6">
+      <RouterLink to="/dashboard" class="flex items-center gap-3">
+        
+      </RouterLink>
     </div>
 
-    <!-- Footer Logout -->
-    <!-- <div class="pa-4">
-      <v-list-item @click="logout" class="custom-btn logout-btn" rounded="lg" block>
-        <v-icon class="text-lg" left>
-          <i class="fas fa-sign-out-alt"></i>
-        </v-icon>
-        <span class="menu-item ml-4">Logout</span>
-      </v-list-item>
-    </div> -->
+    <!-- Navigation -->
+    <nav class="sidebar-scroll flex-1 overflow-y-auto px-4 py-4">
+      <div
+        v-for="group in visibleSidebarItems"
+        :key="group.section"
+        class="mb-5"
+      >
+        <p
+          class="mb-2 px-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-400"
+        >
+          {{ group.section }}
+        </p>
+
+        <div class="space-y-1">
+          <RouterLink
+            v-for="item in group.items"
+            :key="item.path"
+            :to="item.path"
+            class="group flex items-center gap-3 rounded-md px-3 py-2.5 transition-all duration-150"
+            active-class="sidebar-active"
+            exact-active-class="sidebar-active"
+            @click="$emit('navigate')"
+          >
+            <div
+              class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-gray-400 transition-all group-hover:text-purple-600"
+            >
+              <i :class="item.icon" class="text-sm"></i>
+            </div>
+
+            <span
+              class="min-w-0 flex-1 truncate text-[13px] font-medium text-gray-600 transition-colors group-hover:text-gray-900"
+            >
+              {{ item.title }}
+            </span>
+
+            <span
+              v-if="item.badge"
+              class="rounded-full bg-purple-100 px-2 py-0.5 text-[8px] font-bold text-purple-600"
+            >
+              {{ item.badge }}
+            </span>
+          </RouterLink>
+        </div>
+      </div>
+    </nav>
+
+
   </div>
 </template>
 
 <style scoped>
-.side-bar {
-  width: 250px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100vh;
-  background: #ffffff;
- 
+.sidebar-scroll {
+  scrollbar-width: none;
 }
 
-/* Default button state */
-.custom-btn {
-  text-align: left;
-  justify-content: flex-start;
-  transition: all 0.2s ease;
-  border-radius: 8px;
-  padding: 10px 12px;
-  color: #1e1e1e;
+.sidebar-scroll::-webkit-scrollbar {
+  display: none;
 }
 
-/* Hover state */
-.custom-btn:hover {
-  background-color: rgba(39, 191, 160, 0.08); /* soft teal */
-  color: #27bfa0;
+.sidebar-active {
+  background: #f5f3ff;
 }
 
-.custom-btn .v-icon {
-  margin-right: 10px;
-  font-size: 18px;
-  color: #6b7280; /* gray-500 */
+.sidebar-active div {
+  background: white;
+  color: #7c3aed;
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.08);
 }
 
-.custom-btn .menu-item {
-  font-family: 'Inter', sans-serif;
-  font-weight: 500;
-  font-size: 15px;
-  line-height: 22px;
-  color: #374151; /* gray-700 */
-}
-
-/* Active state */
-.custom-active {
-  background-color: rgba(39, 191, 160, 0.12);
-  border-left: 4px solid #27bfa0;
-  color: #27bfa0 !important;
-}
-
-.custom-active .menu-item {
-  color: #27bfa0 !important;
+.sidebar-active span {
+  color: #6d28d9;
   font-weight: 600;
 }
-
-.custom-active .v-icon {
-  color: #27bfa0 !important;
-}
-
-/* Logout hover */
-.logout-btn:hover {
-  background-color: #ffecec;
-  color: #e63946;
-}
-
-.active-bar {
-  display: none; /* no need if using border-left highlight */
-}
-
 </style>
