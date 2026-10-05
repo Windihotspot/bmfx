@@ -80,15 +80,7 @@ const handleLogout = async () => {
     <!-- Header actions -->
     <div class="flex items-center gap-2 sm:gap-3">
       <!-- Notifications -->
-      <button
-        class="relative flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-500 transition hover:bg-gray-50"
-      >
-        <i class="fa-regular fa-bell text-sm"></i>
-
-        <span
-          class="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-purple-600"
-        ></span>
-      </button>
+      
 
       <!-- User menu -->
       <v-menu
