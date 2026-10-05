@@ -279,10 +279,7 @@ const handleFundSubmit = (payload) => {
             <v-icon icon="mdi-chevron-right" size="15" class="text-slate-300" />
           </span>
           <div class="flex items-center gap-2">
-            <span
-              class="rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-medium text-emerald-600"
-              >Live</span
-            >
+            
             <button
               type="button"
               @click="fundDialog = true"

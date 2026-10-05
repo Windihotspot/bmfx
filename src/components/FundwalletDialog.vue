@@ -1,11 +1,12 @@
 <template>
-  <div v-if="modelValue" class="fixed inset-0 z-[9999] flex items-center justify-center px-4 sm:px-4">
+  <Teleport to="body">
+  <div v-if="modelValue" class="fund-overlay">
     <!-- BACKDROP -->
     <div class="absolute inset-0 bg-black/45" @click="close"></div>
 
     <!-- DIALOG -->
     <div
-      class="relative w-full max-w-[420px] bg-white rounded-[20px] overflow-hidden shadow-2xl max-h-[95vh] overflow-y-auto"
+      class="fund-dialog relative w-full max-w-[420px] bg-white rounded-[20px] shadow-2xl overflow-y-auto"
     >
       <!-- HEADER -->
       <div class="fund-header">
@@ -19,7 +20,7 @@
         </button>
       </div>
 
-      <div class="px-6 py-6">
+      <div class="fund-body">
         <!-- AMOUNT -->
         <div class="amount-card">
           <p class="text-[#7c2be8] text-[11px] font-semibold uppercase tracking-wide">
@@ -151,6 +152,7 @@
       </div>
     </div>
   </div>
+  </Teleport>
 </template>
 
 <script setup>
@@ -295,8 +297,45 @@ watch(
 </script>
 
 <style scoped>
+/* Full-screen overlay that always centres the dialog */
+.fund-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 100vh;
+  height: 100dvh;
+  box-sizing: border-box;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* 16px minimum breathing room, plus notch / home-indicator safe areas */
+  padding: 16px;
+  padding-top: max(16px, env(safe-area-inset-top));
+  padding-right: max(16px, env(safe-area-inset-right));
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+  padding-left: max(16px, env(safe-area-inset-left));
+}
+
+/* The overlay's padding already provides the margin, so the dialog just fills
+   the available height (dvh = visible height, vh is the fallback) */
+.fund-dialog {
+  width: 100%;
+  max-width: 420px;
+  max-height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.fund-body {
+  padding: 24px;
+}
+
 .fund-header {
-  height: 80px;
+  min-height: 80px;
   padding: 18px 24px;
   display: flex;
   align-items: center;
@@ -512,5 +551,78 @@ watch(
 
 .cancel-button:hover {
   color: #241044;
+}
+
+/* Long values (BTC address, emails) wrap instead of overflowing */
+.account-row {
+  flex-wrap: wrap;
+}
+
+.account-row > div {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* 16px inputs stop iOS Safari from zooming the page on focus */
+.other-input {
+  font-size: 16px;
+}
+
+/* Small phones */
+@media (max-width: 400px) {
+  .fund-overlay {
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+  }
+
+  .fund-header {
+    min-height: 68px;
+    padding: 14px 16px;
+  }
+
+  .fund-body {
+    padding: 16px;
+  }
+
+  .amount-card {
+    padding: 14px;
+  }
+
+  .amount-input {
+    font-size: 28px;
+  }
+
+  .payment-method {
+    padding: 10px 12px;
+    gap: 10px;
+    min-height: 66px;
+  }
+
+  .method-icon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .method-details {
+    padding: 12px;
+  }
+
+  .preset-chip {
+    padding: 6px 10px;
+  }
+}
+
+/* Short screens, e.g. phones in landscape */
+@media (max-height: 520px) {
+  .fund-overlay {
+    padding-top: max(8px, env(safe-area-inset-top));
+    padding-bottom: max(8px, env(safe-area-inset-bottom));
+  }
+
+  .fund-header {
+    min-height: 56px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
 }
 </style>
