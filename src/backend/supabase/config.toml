@@ -1,0 +1,9 @@
+# Add these blocks to your existing supabase/config.toml
+
+[functions.update-prices]
+# Called by pg_cron with x-cron-secret, so there is no user JWT.
+# The function authenticates the caller itself.
+verify_jwt = false
+
+# Every other function keeps the default (verify_jwt = true) and also
+# re-validates the user inside createHandler().
